@@ -13,6 +13,11 @@ xxx.infected <- matrix(0,nrow=0,ncol=50)
 xxx.recovered <- matrix(0,nrow=0,ncol=50)
 xxx.dead <- matrix(0,nrow=0,ncol=50)
 
+colnames(xxx.tested) <- c("Month","Day",pref47,"Total")
+colnames(xxx.infected) <- c("Month","Day",pref47,"Total")
+colnames(xxx.recovered) <- c("Month","Day",pref47,"Total")
+colnames(xxx.dead) <- c("Month","Day",pref47,"Total")
+
 xxx.tmp <- integer(48)
 names(xxx.tmp) <- c(names(pid),"総計")
 
@@ -22,7 +27,7 @@ for(aa in 1:nrow(fidtable)){
     fid <- substring(fidtable[aa,3],2)
     cat(mm,dd,"\n")
     file_src <- paste("tabula-",fid,".csv",sep="")
-    if(file.exists(file.path("/Users/nono/Downloads", file_src))){
+    if(file.exists(file.path("~/Downloads", file_src))){
         system(paste("mv ~/Downloads/tabula-",fid,".csv data",sep=""))
     }
     tmp <- read.delim(file.path("data", file_src), sep=",",header=TRUE)
@@ -64,6 +69,9 @@ for(aa in 1:nrow(fidtable)){
     xxx.dead <- rbind(xxx.dead, c(mm,dd,xxx.tmp))
 }
 
+writeMatrix(xxx.infected,dir="data", col=TRUE, force=TRUE)
+writeMatrix(xxx.recovered,dir="data", col=TRUE, force=TRUE)
+writeMatrix(xxx.dead,dir="data", col=TRUE, force=TRUE)
 
 pjj_kinki4 <- pid[c("京都府","大阪府","兵庫県","奈良県")]
 matplot(xxx.infected[,pjj_kinki4+2],type="b", pch=1:7,col=1:8,log="y")
