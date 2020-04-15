@@ -23,7 +23,7 @@ for(aa in 1:nrow(fidtable)){
     cat(mm,dd,"\n")
     file_src <- paste("tabula-",fid,".csv",sep="")
     if(file.exists(file.path("/Users/nono/Downloads", file_src))){
-        system(paste("mv /Users/nono/Downloads/tabula-",fid,".csv data",sep=""))
+        system(paste("mv ~/Downloads/tabula-",fid,".csv data",sep=""))
     }
     tmp <- read.delim(file.path("data", file_src), sep=",",header=TRUE)
     tmp <- tmp[tmp[,1]!="",]
@@ -31,8 +31,13 @@ for(aa in 1:nrow(fidtable)){
     pii <- pid[tmp[iii,1]]
     nii <- which(tmp[,1]=="総計")
 
-    j_recovered <- 7 # which(colnames(tmp)=="うち退院")
-    j_dead <- 9 # which(colnames(tmp)=="うち死亡")
+    if(mm==3 && dd<=31){
+        j_recovered <- 6
+        j_dead <- 8
+    } else {
+        j_recovered <- 7 # which(colnames(tmp)=="うち退院")
+        j_dead <- 9 # which(colnames(tmp)=="うち死亡")
+    }
 
     xxx.tmp[] <- 0
     xxx.tmp[pii] <- tmp[iii,2]
@@ -58,3 +63,7 @@ for(aa in 1:nrow(fidtable)){
     }
     xxx.dead <- rbind(xxx.dead, c(mm,dd,xxx.tmp))
 }
+
+
+pjj_kinki4 <- pid[c("京都府","大阪府","兵庫県","奈良県")]
+matplot(xxx.infected[,pjj_kinki4+2],type="b", pch=1:7,col=1:8,log="y")
