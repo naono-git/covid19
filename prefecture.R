@@ -22,6 +22,8 @@ pref47.tmp <- integer(48)
 names(pref47.tmp) <- c(names(pid),"総計")
 
 for(aa in 1:nrow(fidtable)){
+    pref47.tmp <- integer(48)
+    names(pref47.tmp) <- c(names(pid),"総計")
     mm <- fidtable[aa,1]
     dd <- fidtable[aa,2]
     fid <- substring(fidtable[aa,3],2)
@@ -58,6 +60,11 @@ for(aa in 1:nrow(fidtable)){
     if(any(is.na(pref47.tmp))){
         print(pref47.tmp)
     }
+    if(class(pref47.tmp) != "numeric"){
+        cat("hoge")
+        cat(aa, pref47.tmp,"\n")
+        break
+    }
     pref47.recovered <- rbind(pref47.recovered, c(mm,dd,pref47.tmp))
 
     pref47.tmp[] <- 0
@@ -65,6 +72,11 @@ for(aa in 1:nrow(fidtable)){
     pref47.tmp[48] <- tmp[nii,j_dead]
     if(any(is.na(pref47.tmp))){
         print(pref47.tmp)
+    }
+    if(class(pref47.tmp) != "numeric"){
+        cat("fuga")
+        cat(aa, pref47.tmp,"\n")
+        break
     }
     pref47.dead <- rbind(pref47.dead, c(mm,dd,pref47.tmp))
 }
@@ -75,3 +87,5 @@ writeMatrix(pref47.dead,dir="data", col=TRUE, force=TRUE)
 
 pjj_kinki4 <- pid[c("京都府","大阪府","兵庫県","奈良県")]
 matplot(pref47.infected[,pjj_kinki4+2],type="b", pch=1:7,col=1:8,log="y")
+
+matplot(pref47.infected[,3:49],type="l", pch=1:7,col=1:8)
