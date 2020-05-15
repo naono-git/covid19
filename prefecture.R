@@ -21,6 +21,8 @@ colnames(pref47.dead) <- c("Month","Day",pref47,"Total")
 pref47.tmp <- integer(48)
 names(pref47.tmp) <- c(names(pid),"総計")
 
+overwrite <- TRUE
+
 for(aa in 1:nrow(fidtable)){
     pref47.tmp <- integer(48)
     names(pref47.tmp) <- c(names(pid),"総計")
@@ -52,6 +54,12 @@ for(aa in 1:nrow(fidtable)){
     if(any(is.na(pref47.tmp))){
         print(pref47.tmp)
     }
+    if(class(pref47.tmp) != "numeric"){
+        cat("bad infected numbers")
+        cat(aa, pref47.tmp,"\n")
+        overwrite <- FALSE
+        break
+    }
     pref47.infected <- rbind(pref47.infected, c(mm,dd,pref47.tmp))
 
     pref47.tmp[] <- 0
@@ -61,8 +69,9 @@ for(aa in 1:nrow(fidtable)){
         print(pref47.tmp)
     }
     if(class(pref47.tmp) != "numeric"){
-        cat("hoge")
+        cat("bad recovered numbers\n")
         cat(aa, pref47.tmp,"\n")
+        overwrite <- FALSE
         break
     }
     pref47.recovered <- rbind(pref47.recovered, c(mm,dd,pref47.tmp))
@@ -74,16 +83,17 @@ for(aa in 1:nrow(fidtable)){
         print(pref47.tmp)
     }
     if(class(pref47.tmp) != "numeric"){
-        cat("fuga")
+        cat("bad dead numbers")
         cat(aa, pref47.tmp,"\n")
+        overwrite <- FALSE
         break
     }
     pref47.dead <- rbind(pref47.dead, c(mm,dd,pref47.tmp))
 }
 
-writeMatrix(pref47.infected,dir="data", col=TRUE, force=TRUE)
-writeMatrix(pref47.recovered,dir="data", col=TRUE, force=TRUE)
-writeMatrix(pref47.dead,dir="data", col=TRUE, force=TRUE)
+writeMatrix(pref47.infected,dir="data", col=TRUE, force=overwrite)
+writeMatrix(pref47.recovered,dir="data", col=TRUE, force=overwrite)
+writeMatrix(pref47.dead,dir="data", col=TRUE, force=overwrite)
 
 pjj_kinki4 <- pid[c("京都府","大阪府","兵庫県","奈良県")]
 matplot(pref47.infected[,pjj_kinki4+2],type="b", pch=1:7,col=1:8,log="y")
